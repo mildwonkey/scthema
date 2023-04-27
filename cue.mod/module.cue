@@ -1,1 +1,1 @@
-module: "kind"
+module: "scthema"
