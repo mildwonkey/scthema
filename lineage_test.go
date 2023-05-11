@@ -14,7 +14,8 @@ var dashJSON []byte
 
 func TestValidateDash(t *testing.T) {
 	ctx := cuecontext.New()
-	lin, err := Lineage(thema.NewRuntime(ctx))
+	rt := thema.NewRuntime(ctx)
+	lin, err := Lineage(rt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,3 +26,7 @@ func TestValidateDash(t *testing.T) {
 	_, err = sch.Validate(data)
 	t.Fatal(err)
 }
+
+// https://github.com/grafana/thema/blob/main/docs/go-quickstart.md this gives
+// the same "not a lineage" error - does the example work as written? why
+// doesn't our stuff ever seem to work with thema?

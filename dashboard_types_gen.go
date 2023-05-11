@@ -675,6 +675,9 @@ type Dashboard struct {
 		List []AnnotationQuery `json:"list,omitempty"`
 	} `json:"annotations,omitempty"`
 
+	// Colorpalette what's the color palette for this dashboard?
+	Colorpalette *string `json:"colorpalette,omitempty"`
+
 	// Description of dashboard.
 	Description *string `json:"description,omitempty"`
 
