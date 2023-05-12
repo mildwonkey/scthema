@@ -54,9 +54,46 @@ func main() {
 		fmt.Println("no valid schema found for bits")
 	}
 
-	// TODO: write actual lenses to see how translate works when changes are required
-	i, lacunas := i.Translate(thema.SyntacticVersion{0, 2})
-	print(lacunas)
+	// TODO (to verify below): yank the title out of the dashboard json
+	i01, _ := i.Translate(thema.SyntacticVersion{0, 1})
+	title := i01.Underlying().Attribute("title")
+	print(title.Contents()) // ""
+
+	/*
+		Nothing below this comment is quite working the way I expect
+		Figure out missing "title" above!
+	*/
+
+	// schema v 0,3 renames "title" to "header"; I expected a lacuna beofre the
+	// lens was written but there was no output. Is this because i'ts optional?
+	// Will try again with schema 0-1
+	i02, lacunas := i.Translate(thema.SyntacticVersion{0, 2})
+	print(lacunas) // no lacuans in this example, even without the lenses. maybe a major version thing?
+
+	// TODO: there's no lacuna (maybe because it's an optional value), so figure out how
+	// to pull the "header" value and confirm that the (now-written) lens is
+	// working
+	print(i02.Underlying().Attribute("title")) // should not exist in a 0,2 dashboard
+	// output: @title()
+	// hmmmmmmmmmmmmm
+
+	// the comment on Attribute says any methods on the returned attr should
+	// result in an error, but this doesn't return an error - how would I know
+	// that "title" doesn't exist in this schema02 instance?
+	title = i02.Underlying().Attribute("title")
+	print(title.Contents()) // ""
+
+	print(i02.Underlying().Attribute("header")) // should match the earlier "title" field
+	// output: @header()
+	// hmmmmmmmmmmmmm
+	header := i02.Underlying().Attribute("header")
+	print(header.Contents()) // ""
+
+	// TODO: GO TYPES
+	// why am I hitting Underlying()? Where are my go types?
+
+	// TODO: similar changes, but from schema [0,X] to [1,X]
+	// maybe we only get lacunas for required changes?
 
 }
 

@@ -1091,7 +1091,7 @@ lineage: {
 			
 			// Title of dashboard.
 			// title?: string
-			// schema [0,2] changes title to header (for the)
+			// schema [0,2] changes title to header
 			// header?: string
 
 			// Description of dashboard.
@@ -1612,14 +1612,16 @@ lineage: {
 				type: "heatmap" @grafanamaturity(NeedsExpertReview)
 				...
 			} @cuetsy(kind="interface") @grafanamaturity(NeedsExpertReview)
-		}
-	}]
-	lenses: [{
-		to: [0, 0]
-		from: [0, 1]
-		input: _
-		result: {
-		}
-		lacunas: []
+		},
 	}]
 }
+
+lineage: lenses: [{
+	to: [0, 3]
+    from: [0, 2]
+    input: _
+    result: {
+        header: input.title
+    }
+}]
+

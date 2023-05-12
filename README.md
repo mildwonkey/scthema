@@ -3,13 +3,15 @@
 Objectives:
 - [x] use a cue file (dashboard_kind.cue) to vet a json blob's schema (dashboard.json)
 - [x] confirm that kindsys is happy with the above (Core kind; ~constraint.cue~)
-- [x] Inspect the schema lineages (thema go library)
+- [x] inspect the schema lineages (thema go library)
+- [ ] experiment with go bindings (go types)
 - [ ] experiment with lineages/schemas/lenses/lacunas 
     - add a lineage, schema, and bidirectional lenses for each
 
-Current status:
+------
+_random notes_
 
-* `thema` codegen is working  
+Mostly thema notes:
 
 Note: we need to identify the path to the lineage within the cue file so thema knows what to work with:
 ```-p lineage```
@@ -19,15 +21,20 @@ There isn't a reserved keyword for the lineage path; it can be called anything (
 Use `LookupPath` to extract the lineage in code:
 ```lineage := v.LookupPath(cue.ParsePath("lineage"))```
 
+* `load.InstanceWithThema` requires a cue.mod
+* constraint.cue causes issues with thema: import failed: cannot find package "github.com/grafana/kindsys"
+    * go error or cue error?
+* need to include the kindsys.Core
+* `thema` codegen is working  
 
 ---
-_random notes_
 
-straight cue
+cue specific
 
 * constraint.cue: identified as not needed; it has been (or should be) removed from grafana/kindsys
 * `cue vet` is happy (dashboard.json && dashboard_kind.cue)
     * TODO: `cue vet dashboard_kind.cue dashboard.json` errors after the thema import was added (for thema.Lineage)
+    - found this note in the thema docs, it should take care of that: https://github.com/grafana/thema/blob/main/docs/go-mapping.md#optional-populate-thema-as-a-cue-dependency
 
 ```bash
 cue vet dashboard_kind.cue dashboard.json
@@ -50,13 +57,9 @@ To load local CUE files alongside the kindsys framework:
         - not sure how we end up with files in the cue.mod directory, or if it's relevant to this use case
         - perhaps it'd be an alternative to kindsys.BuildInstance - just copy all the kinds into cue.mod/
 
-thema 
-* `load.InstanceWithThema` requires a cue.mod
-* constraint.cue causes issues with thema: import failed: cannot find package "github.com/grafana/kindsys"
-    * go error or cue error?
-* need to include the kindsys.Core
 
 General notes/findings(?)
 
 - `cue.mod` directory is ignored by kindsys loading functions; it's _required_ when using thema but I'm not sure why
-- very confusing: cue is declarative, but thema depends on the _order_ of sequences - whre does the schema version go? what's the link between "unnumbered schemas" and "dashboard schema version 36"? shouldn't the schema version be declared as well? 
+- cue is declarative, but thema depends on the _order_ of sequences - whre does the schema version go? what's the link between "unnumbered schemas" and "dashboard schema version 36"? shouldn't the schema version be declared as well? (some of this has been improved in thema since writing this)
+- `lineage` isn't a keyword to thema; need to pass the actual path. Is `seqs`? Are they all arbitrary keys? That seems fragile; we might need to add stricter checking for that (if there's default or reserved attribute for lineage, we don't need to write `v.LookupPath(cue.ParsePath($LINLINLIN))` every time - maybe that's fine, but it seems like it would be hard to troubleshoot, and hard for third party app developers. Maybe that's something for the SDK)
