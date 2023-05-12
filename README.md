@@ -1,26 +1,39 @@
 # what's all this then? 
 
-Objectives: 
-* use a cue file (dashboard_kind.cue) to vet a json blob's schema (dashboard.json)
-* confirm that kindsys is happy with the above (Core kind; constraint.cue)
-* Inspect the schema lineages (thema go library)
+Objectives:
+- [x] use a cue file (dashboard_kind.cue) to vet a json blob's schema (dashboard.json)
+- [x] confirm that kindsys is happy with the above (Core kind; ~constraint.cue~)
+- [x] Inspect the schema lineages (thema go library)
+- [ ] experiment with lineages/schemas/lenses/lacunas 
+    - add a lineage, schema, and bidirectional lenses for each
 
 Current status:
 
-thema cli commands work; I needed to modify the cue files (there's a PR in grafana to update them, so I will grab the current cue definition when it's merged)
+* `thema` codegen is working  
 
-> Note: we need to include `-p lineage` to the thema cli commands to get past the "not a lineage" errors
+Note: we need to identify the path to the lineage within the cue file so thema knows what to work with:
+```-p lineage```
 
-The thema library is giving the same "not a lineage" error which was resolved in the CLI with `-p` flag. Next step is figuring out how to do that in code.
+There isn't a reserved keyword for the lineage path; it can be called anything (lin, lineage, linmanualmiranda, etc)
+
+Use `LookupPath` to extract the lineage in code:
+```lineage := v.LookupPath(cue.ParsePath("lineage"))```
+
 
 ---
 _random notes_
 
 straight cue
 
-* constraint.cue: ignore for now; must figure out cue loading module ~stuff
+* constraint.cue: identified as not needed; it has been (or should be) removed from grafana/kindsys
 * `cue vet` is happy (dashboard.json && dashboard_kind.cue)
-    * NOTE: `cue vet dashboard_kind.cue dashboard.json` errors after the thema import was added (for thema.Lineage)
+    * TODO: `cue vet dashboard_kind.cue dashboard.json` errors after the thema import was added (for thema.Lineage)
+
+```bash
+cue vet dashboard_kind.cue dashboard.json
+import failed: cannot find package "github.com/grafana/thema":
+    ./dashboard_kind.cue:7:2
+```
 
 Loading CUE files from multiple sources:
 kindsys.BuildInstance  will pull all the kindsys cue files in regardless of how it's called.  
@@ -38,24 +51,12 @@ To load local CUE files alongside the kindsys framework:
         - perhaps it'd be an alternative to kindsys.BuildInstance - just copy all the kinds into cue.mod/
 
 thema 
-* cli not working with kindsyssy files: `thema lineage gen gotypes -l dashboard_kind.cue`
-    * note: worked with updated files + `-p` flag
 * `load.InstanceWithThema` requires a cue.mod
 * constraint.cue causes issues with thema: import failed: cannot find package "github.com/grafana/kindsys"
     * go error or cue error?
-* still getting `not a lineage (instance root)`
 * need to include the kindsys.Core
 
-```
-Error: not a lineage (instance root): required field is optional in subsumed value: joinSchema (and 1 more errors)
-Did you forget to pass a CUE path with -p?
-```
-
-TODO
-- `constraint.cue` - actually figure out what it's doing and how it works; how does it interact with `kindsys`? 
-
-findings(?)
+General notes/findings(?)
 
 - `cue.mod` directory is ignored by kindsys loading functions; it's _required_ when using thema but I'm not sure why
 - very confusing: cue is declarative, but thema depends on the _order_ of sequences - whre does the schema version go? what's the link between "unnumbered schemas" and "dashboard schema version 36"? shouldn't the schema version be declared as well? 
-
