@@ -27,6 +27,13 @@ Use `LookupPath` to extract the lineage in code:
 * need to include the kindsys.Core
 * `thema` codegen is working  
 
+Is thema slow? I hope this is an issue with my setup, and not normal behavior:
+
+```
+translating to 0,2
+translation took 10.410393416s
+```
+
 ---
 
 cue specific
