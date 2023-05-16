@@ -7,6 +7,8 @@ Objectives:
 - [ ] experiment with go bindings (go types)
 - [ ] experiment with lineages/schemas/lenses/lacunas 
     - add a lineage, schema, and bidirectional lenses for each
+    - 0,1 -> 0,2 lens didn't appear to do anything
+    - renaming 0,2 - 1,0 got me this: schema 1.0 must be backwards incompatible with schema 0.1
 
 ------
 _random notes_

@@ -695,7 +695,7 @@ type Dashboard struct {
 	// 2 for shared crosshair AND shared tooltip.
 	GraphTooltip DashboardCursorSync `json:"graphTooltip"`
 
-	// Header schema [0,2] changes title to header
+	// Header schema [0,2] copies title to header
 	Header *string `json:"header,omitempty"`
 
 	// Unique numeric identifier for the dashboard.
