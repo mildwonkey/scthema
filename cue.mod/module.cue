@@ -1,1 +1,1 @@
-module: "scthema"
+module: "example"
