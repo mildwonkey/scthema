@@ -101,6 +101,8 @@ github.com/grafana/thema v0.0.0-20230511182720-3146087fcc26 h1:HX927q4X1n451pnGb
 github.com/grafana/thema v0.0.0-20230511182720-3146087fcc26/go.mod h1:Pn9nfzCk7nV0mvNgwusgCjCROZP6nm4GpwTnmEhLT24=
 github.com/grafana/thema v0.0.0-20230515190554-2165e14636e4 h1:DI2UOHxOZUqdNrkRmF2Pw/NxQhVBAcYWE44pNT6/3js=
 github.com/grafana/thema v0.0.0-20230515190554-2165e14636e4/go.mod h1:Pn9nfzCk7nV0mvNgwusgCjCROZP6nm4GpwTnmEhLT24=
+github.com/grafana/thema v0.0.0-20230517153228-b572cbae23c5 h1:1ef+4529743rKBa7bkZ37KQ1kOSyNvJ6R5OaYIiSU3Y=
+github.com/grafana/thema v0.0.0-20230517153228-b572cbae23c5/go.mod h1:Pn9nfzCk7nV0mvNgwusgCjCROZP6nm4GpwTnmEhLT24=
 github.com/hashicorp/go-version v1.2.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=

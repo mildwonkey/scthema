@@ -9,7 +9,6 @@ import (
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 	"github.com/grafana/thema"
-	"github.com/grafana/thema/load"
 	"github.com/grafana/thema/vmux"
 )
 
@@ -19,14 +18,7 @@ func main() {
 	ctx := cuecontext.New()
 	rt := thema.NewRuntime(ctx)
 
-	// This loads the core kinds from kindsys plus the dashboard_kind.cue
-	bi, err := load.InstanceWithThema(LocalSchemaFS, "")
-	exitIfErr(err)
-	v := ctx.BuildInstance(bi)
-
-	// get the lineage
-	lineage := v.LookupPath(cue.ParsePath("lineage"))
-	lin, err := thema.BindLineage(lineage, rt)
+	lin, err := Lineage(rt)
 	exitIfErr(err)
 
 	// Get and decode the dashboard json
@@ -123,6 +115,7 @@ func print(in interface{}) {
 
 func exitIfErr(err error) {
 	if err != nil {
+		panic(err)
 		fmt.Println(err)
 		os.Exit(1)
 	}
