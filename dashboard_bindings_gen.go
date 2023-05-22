@@ -65,7 +65,7 @@ var _ thema.LineageFactory = Lineage
 var themaFSFordashboard embed.FS
 
 func getThemaFSFordashboard() fs.FS {
-	return load.AsModFS(themaFSFordashboard, "scthema")
+	return load.AsModFS(themaFSFordashboard, "main")
 }
 
 func loadInstanceFordashboard() (*build.Instance, error) {
