@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"testing"
 
+	"cuelang.org/go/cue/cuecontext"
 	"github.com/grafana/thema"
 	"github.com/grafana/thema/vmux"
 )
@@ -20,9 +21,10 @@ var validTestData embed.FS
 var invalidTestData embed.FS
 
 var (
-	data, _  = vmux.NewJSONCodec("dashboard.json").Decode(ctx, dashJSON)
-	lin, _   = Lineage(thema.NewRuntime(ctx))
-	sch01, _ = lin.Schema(thema.SV(0, 1))
+	ctx         = cuecontext.New()
+	dashData, _ = vmux.NewJSONCodec("dashboard.json").Decode(ctx, dashJSON)
+	lin, _      = Lineage(thema.NewRuntime(ctx))
+	sch01, _    = lin.Schema(thema.SV(0, 1))
 )
 
 func TestValidateDash(t *testing.T) {
@@ -87,14 +89,14 @@ func TestValidateDash(t *testing.T) {
 
 func BenchmarkValidate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		sch01.Validate(data)
+		sch01.Validate(dashData)
 	}
 }
 
 func BenchmarkValidate_invalid(b *testing.B) {
 	sch, _ := lin.Schema(thema.SV(0, 0))
 	for i := 0; i < b.N; i++ {
-		_, err := sch.Validate(data)
+		_, err := sch.Validate(dashData)
 		if err == nil {
 			b.Fatal("expected validate errors")
 		}
@@ -103,12 +105,12 @@ func BenchmarkValidate_invalid(b *testing.B) {
 
 func BenchmarkValidateAny(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		lin.ValidateAny(data)
+		lin.ValidateAny(dashData)
 	}
 }
 
 func TestTranslate(t *testing.T) {
-	inst, _ := sch01.Validate(data)
+	inst, _ := sch01.Validate(dashData)
 	// There's no error return from Translate(yet), so we'll just make sure it
 	// doesn't panic.
 	_, _ = inst.Translate(thema.SV(1, 0))
@@ -118,7 +120,7 @@ func TestTranslate(t *testing.T) {
 // This only runs once as-is; add `-benchtime=20x` to the command line. (100x
 // timed out)
 func BenchmarkTranslate(b *testing.B) {
-	inst, _ := sch01.Validate(data)
+	inst, _ := sch01.Validate(dashData)
 	for i := 0; i < b.N; i++ {
 		inst.Translate(thema.SV(1, 0))
 	}

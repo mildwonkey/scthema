@@ -23,15 +23,13 @@ schemas: [
 			uid?: string
 			// Title of dashboard.
 			title?: string
-			// Description of dashboard.
-			description?: string
-			// This property should only be used in dashboards defined by plugins.  It is a quick check
-			// to see if the version has changed since the last time.  Unclear why using the version property
-			// is insufficient.
 
 			// [POC] A made up required field - removing this is a backwards incompatible change
 			absolutelyRequired: string
 
+			// This property should only be used in dashboards defined by plugins.  It is a quick check
+			// to see if the version has changed since the last time.  Unclear why using the version property
+			// is insufficient.
 			revision?: int64 @grafanamaturity(NeedsExpertReview)
 			// For dashboards imported from the https://grafana.com/grafana/dashboards/ portal
 			gnetId?: string @grafanamaturity(NeedsExpertReview)
@@ -1623,7 +1621,11 @@ schemas: [
 	},
 ]
 
-lenses: [{
+// This is "working", wether or not the bottom lens is commented it. I'm not
+// convinced that's not coincidence (thema might be assuming we have a backwards
+// lens) - thema depends on the sorted order of lenses, not the to/from values.
+lenses: [
+{
 	to: [1, 0]
     from: [0, 1]
     input: _
@@ -1631,8 +1633,6 @@ lenses: [{
         header: input.title
     }
 }, 
-// adding this may have caused the json data to validate against 0,0 ??
-// figure this out.
 // {
 // 	to: [0, 1]
 //     from: [0, 0]

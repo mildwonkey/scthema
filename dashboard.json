@@ -1,4 +1,5 @@
 {
+  "description": "I am a 0.1-only field",
   "colorpalette": "notugly",
   "absolutelyRequired": "ohiya",
   "annotations": {

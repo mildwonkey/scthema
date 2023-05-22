@@ -11,12 +11,11 @@ import (
 	"github.com/grafana/thema/vmux"
 )
 
-const dashFile = "auto_decimals.json"
-
-var ctx = cuecontext.New()
-var rt = thema.NewRuntime(ctx)
+const dashFile = "dashboard.json"
 
 func main() {
+	ctx := cuecontext.New()
+	rt := thema.NewRuntime(ctx)
 	// Get and decode the dashboard json
 	d, _ := os.ReadFile(dashFile)
 	dashdata, _ := vmux.NewJSONCodec(dashFile).Decode(ctx, d)
@@ -59,6 +58,7 @@ func main() {
 	start := time.Now()
 	// NOTE: i.Translate panics if the target schema does not exist
 	// https://github.com/grafana/thema/issues/151
+	// i.Translate also panics if lenses are empty or misisng.
 	i10, _ := i.Translate(thema.SyntacticVersion{1, 0})
 	duration := time.Since(start)
 	fmt.Printf("translated to %s in %s seconds\n", i10.Schema().Version().String(), duration)
@@ -80,8 +80,6 @@ func main() {
 	if headerStr != origTitleStr {
 		fmt.Printf("title and header should be the same: %q != %q\n", origTitleStr, headerStr)
 	}
-
-	// where's the metadata? createdBy, updatedAt, whatever - is any of it relevant for the migration?
 }
 
 // don't you judge me earl
